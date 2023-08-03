@@ -52,7 +52,7 @@ app.put('/todos/:id', (req, res) => {
   }
   todos[index].title = title;
   todos[index].completed = completed;
-  console.log("PUT API is called " + todos[index].completed);
+  console.log("ID: " + index + " PUT API is called. Title " + todos[index].title + " " + todos[index].completed);
   res.json(todos[index]);
 });
 
