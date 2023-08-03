@@ -6,17 +6,24 @@ class Todo {
   final int id;
   final String title;
   bool completed;
+  bool selected; // Add this property to indicate if the todo is selected
 
   Todo({
     required this.id,
     required this.title,
     required this.completed,
+    this.selected = false, // Default value is false (not selected)
   });
 
   setCompleted(bool newValue) {
     completed = newValue;
   }
+
+  toggleSelected() {
+    selected = !selected;
+  }
 }
+
 
 void main() {
   runApp(MyApp());
@@ -140,6 +147,14 @@ class _TodoScreenState extends State<TodoScreen> {
 
 
 
+  // Function to delete selected todos
+  void _deleteSelectedTodos() async {
+    List<Todo> selectedTodos = todos.where((todo) => todo.completed).toList();
+    for (Todo todo in selectedTodos) {
+      await deleteTodo(todo);
+    }
+  }
+
     Future<void> updateTodo(Todo todo) async {
       try {
         await apiService.put('todos/${todo.id}', {
@@ -162,6 +177,7 @@ class _TodoScreenState extends State<TodoScreen> {
         print('Error deleting todo: $e');
       }
     }
+
 
 
   @override
@@ -207,10 +223,10 @@ class _TodoScreenState extends State<TodoScreen> {
           ),
           SizedBox(height: 16),
           FloatingActionButton(
-            onPressed: () {
-              // Implement a confirmation dialog before deleting the todo
-              // Call deleteTodo to delete the todo
-            },
+              onPressed: () {
+                _deleteSelectedTodos(); // Call the function to delete selected todos
+              },
+       
             child: Icon(Icons.delete),
           ),
         ],
